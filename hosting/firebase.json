@@ -1,0 +1,24 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "garden-api-cf2ec",
+          "appId": "1:246586820110:android:6af7809b50743abd4dde5f",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "garden-api-cf2ec",
+          "configurations": {
+            "android": "1:246586820110:android:6af7809b50743abd4dde5f",
+            "ios": "1:246586820110:ios:8396a8f8dbe8a0544dde5f",
+            "web": "1:246586820110:web:793ac08027e110ce4dde5f",
+            "windows": "1:246586820110:web:85c8425c6e4990d44dde5f"
+          }
+        }
+      }
+    }
+  }
+}
