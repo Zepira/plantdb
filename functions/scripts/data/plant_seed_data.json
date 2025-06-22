@@ -1,0 +1,166 @@
+[
+  {
+    "commonName": "Silverbeet",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/garden-api-cf2ec.firebasestorage.app/o/silverbeet.png?alt=media&token=6d45e479-5036-4596-90bd-ecfd7bd3b116",
+    "botanicalName": "Beta vulgaris var. cicla",
+    "plantType": "Perennial",
+    "lightNeeds": "Full Sun",
+    "soilType": ["Loamy", "Well-drained"],
+    "waterRequirements": "Moderate",
+    "climateZones": [1, 2, 3, 4, 5, 6, 7],
+    "growth": {
+      "heightCm": 60,
+      "spreadCm": 40,
+      "cutAndComeAgain": true,
+      "harvestType": "continual",
+      "selfReproducing": {
+        "selfSeeding": true,
+        "runners": false,
+        "splitCorms": false,
+        "notes": "Can self-seed if left to flower"
+      }
+    },
+    "seasonalTimelineByZone": {
+      "3": {
+        "sow": ["March", "April", "August"],
+        "transplant": ["April", "September"],
+        "takeCuttings": [],
+        "flower": ["November", "December"],
+        "harvest": ["June", "July", "August", "September"]
+      },
+      "5": {
+        "sow": ["August", "September"],
+        "transplant": ["October"],
+        "takeCuttings": [],
+        "flower": ["December"],
+        "harvest": ["October", "November", "December"]
+      }
+    },
+    "propagation": [
+      {
+        "method": "Seed",
+        "description": "Direct sow seeds 1-2 cm deep in well-prepared soil."
+      },
+      {
+        "method": "Cuttings",
+        "description": "Can take leaf cuttings, but not commonly done."
+      },
+      {
+        "method": "Division",
+        "description": "Divide mature plants in early spring or autumn."
+      },
+      {
+        "method": "Self-seeding",
+        "description": "Allow plants to flower and set seed, which can be collected or allowed to self-seed"
+      }
+    ],
+
+    "yieldPerPlant": {
+      "estimatedWeightKg": 2.0,
+      "harvestFrequency": "Weekly"
+    },
+    "purchaseLinks": [
+      {
+        "variety": "Fordhook Giant",
+        "type": "Seed",
+        "supplier": "The Seed Collection",
+        "url": "https://www.theseedcollection.com.au/Silverbeet-Fordhook-Giant"
+      }
+    ],
+    "resources": [
+      {
+        "title": "How to Grow Silverbeet in Australia",
+        "type": "guide",
+        "source": "Gardening Australia",
+        "url": "https://www.abc.net.au/gardening/how-to/silverbeet-guide"
+      },
+      {
+        "title": "Silverbeet Growing Video",
+        "type": "video",
+        "source": "YouTube",
+        "url": "https://www.youtube.com/watch?v=abcdef123"
+      }
+    ]
+  },
+  {
+    "commonName": "Strawberry",
+    "imageUrl": "https://firebasestorage.googleapis.com/v0/b/garden-api-cf2ec.firebasestorage.app/o/strawberry.png?alt=media&token=fd562097-a828-4897-a55c-d45d2636b346",
+    "botanicalName": "Fragaria \u00d7 ananassa",
+    "plantType": "Perennial",
+    "lightNeeds": "Full Sun",
+    "soilType": ["Loamy", "Slightly Acidic"],
+    "waterRequirements": "Moderate",
+    "climateZones": [2, 3, 4, 5, 6],
+    "growth": {
+      "heightCm": 20,
+      "spreadCm": 30,
+      "cutAndComeAgain": false,
+      "harvestType": "single",
+      "selfReproducing": {
+        "selfSeeding": false,
+        "runners": true,
+        "splitCorms": false,
+        "notes": "Spreads via runners easily"
+      }
+    },
+    "seasonalTimelineByZone": {
+      "3": {
+        "sow": ["March"],
+        "transplant": ["April"],
+        "takeCuttings": ["April"],
+        "flower": ["September", "October"],
+        "harvest": ["November", "December"]
+      },
+      "4": {
+        "sow": ["April"],
+        "transplant": ["May"],
+        "takeCuttings": ["May"],
+        "flower": ["October"],
+        "harvest": ["December"]
+      }
+    },
+
+    "propagation": [
+      {
+        "method": "Seed",
+        "description": "Direct sow seeds 1-2 cm deep in well-prepared soil."
+      },
+      {
+        "method": "Self-seeding",
+        "description": "Can self seed if allowed to flower."
+      },
+      {
+        "method": "Cuttings",
+        "description": "Can take leaf cuttings, but not commonly done."
+      },
+      {
+        "method": "Division",
+        "description": "Divide mature plants in early spring or autumn."
+      },
+      {
+        "method": "Runners",
+        "description": "Allow plants to produce runners, which can be rooted in soil."
+      }
+    ],
+    "yieldPerPlant": {
+      "estimatedWeightKg": 0.5,
+      "harvestFrequency": "Seasonal"
+    },
+    "purchaseLinks": [
+      {
+        "variety": "Red Gauntlet",
+        "type": "Runner",
+        "supplier": "Digger's Club",
+        "url": "https://www.diggers.com.au/products/strawberry-red-gauntlet"
+      }
+    ],
+    "resources": [
+      {
+        "title": "Strawberry Growing Guide",
+        "type": "guide",
+        "source": "Sustainable Gardening Australia",
+        "url": "https://www.sgaonline.org.au/strawberries-growing-guide"
+      }
+    ]
+  }
+]

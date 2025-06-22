@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "246586820110",
+    "project_id": "garden-api-cf2ec",
+    "storage_bucket": "garden-api-cf2ec.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246586820110:android:6af7809b50743abd4dde5f",
+        "android_client_info": {
+          "package_name": "com.example.plant_db"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcSTYHoU9M71LHn4gNUDYMJ47ss1OhgCs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
