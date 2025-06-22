@@ -1,2 +1,2 @@
 # plantdb
-Plant Database
+Plant Database.
