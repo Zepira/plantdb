@@ -3,10 +3,10 @@
     "commonName": "Silverbeet",
     "imageUrl": "https://firebasestorage.googleapis.com/v0/b/garden-api-cf2ec.firebasestorage.app/o/silverbeet.png?alt=media&token=6d45e479-5036-4596-90bd-ecfd7bd3b116",
     "botanicalName": "Beta vulgaris var. cicla",
-    "plantType": "Perennial",
-    "lightNeeds": "Full Sun",
+    "plantType": "Vegetable",
+    "lightRequirements": ["Full Sun"],
     "soilType": ["Loamy", "Well-drained"],
-    "waterRequirements": "Moderate",
+    "waterRequirements": ["Medium"],
     "climateZones": [1, 2, 3, 4, 5, 6, 7],
     "growth": {
       "heightCm": 60,
@@ -86,10 +86,10 @@
     "commonName": "Strawberry",
     "imageUrl": "https://firebasestorage.googleapis.com/v0/b/garden-api-cf2ec.firebasestorage.app/o/strawberry.png?alt=media&token=fd562097-a828-4897-a55c-d45d2636b346",
     "botanicalName": "Fragaria \u00d7 ananassa",
-    "plantType": "Perennial",
-    "lightNeeds": "Full Sun",
+    "plantType": "Fruit",
+    "lightRequirements": ["Full Sun"],
     "soilType": ["Loamy", "Slightly Acidic"],
-    "waterRequirements": "Moderate",
+    "waterRequirements": ["Medium"],
     "climateZones": [2, 3, 4, 5, 6],
     "growth": {
       "heightCm": 20,
@@ -162,5 +162,125 @@
         "url": "https://www.sgaonline.org.au/strawberries-growing-guide"
       }
     ]
+  },
+  {
+    "commonName": "Lavender 'Grosso'",
+    "botanicalName": "Lavandula x intermedia 'Grosso'",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["Drought tolerant"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/products/lavender-grosso-plant-plaeg_08ecec05-a085-4007-9a34-1d6865885a01.jpg?v=1637122759&width=1146",
+    "plantType": "Flower"
+  },
+  {
+    "commonName": "Helichrysum ‘Copper Red’",
+    "botanicalName": "Helichrysum bracteatum",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["Drought tolerant"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/products/hehlichrysum-copper-red-s593_237aeda5-dd0f-4397-af3d-d056a242ff81.jpg?v=1637122418&width=1146",
+    "plantType": "Flower"
+  },
+  {
+    "commonName": "Heavenly Scented Sweet Pea Collection",
+    "botanicalName": "Lathyrus odoratus",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["Low"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/files/SPHSC-Heavenly-Scented-Sweet-Pea-Seed-Collection.jpg?v=1749161892&width=1016",
+    "plantType": "Flower"
+  },
+  {
+    "commonName": "Marigold 'Red Gem'",
+    "botanicalName": "Tagetes tenuifolia",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["Low"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/products/marigold-red-gem-seed-s652_caf835f4-b0de-4497-b50c-5d5a58287b53.jpg?v=1637121761&width=1146",
+    "plantType": "Flower"
+  },
+  {
+    "commonName": "Russian Sage 'Blue Spire'",
+    "botanicalName": "Salvia yangii syn. Perovskia atriplicifolia",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["High"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/files/Russian-Sage-PRUS-01.jpg?v=1684305510&width=1146",
+    "plantType": "Flower"
+  },
+  {
+    "commonName": "Marigold 'Strawberry Blonde'",
+    "botanicalName": "Tagetes patula",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["High"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/files/Marigold-Strawberry-Blonde-S647-01.jpg?v=1709596689&width=1146",
+    "plantType": "Flower"
+  },
+  {
+    "commonName": "Cucumber 'Lebanese Mini Muncher' (Organic)",
+    "botanicalName": "Cucumis sativus",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["Medium"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/products/cucumber-lebanese-mini-muncher-s104_7f237b67-6a2f-4d3a-a84d-493ea845bb94.jpg?v=1637122359&width=1146",
+    "plantType": "Vegetable"
+  },
+  {
+    "commonName": "Lettuce Heirloom Mix",
+    "botanicalName": "Lactuca sativa",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["Medium"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/products/lettuce-heirloom-mix-s137_d0c85a77-25ce-4da5-a18c-78c3854f77f8.jpg?v=1637121575&width=1146",
+    "plantType": "Vegetable"
+  },
+  {
+    "commonName": "Cabbage 'Mini'",
+    "botanicalName": "Brassica oleracea",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["Medium"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/products/cabbage-mini-s061_a110c26c-bcff-46b7-8b1c-08914c4d80a9.jpg?v=1637122352&width=1146",
+    "plantType": "Vegetable"
+  },
+  {
+    "commonName": "Tomato '42 Days'",
+    "botanicalName": "Solanum lycopersicum L.",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["Medium"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/products/s220_tomato_42_days.jpg?v=1657168857&width=1146",
+    "plantType": "Vegetable"
+  },
+  {
+    "commonName": "Broad Bean 'Aquadulce'",
+    "botanicalName": "Vicia faba",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["Medium"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/products/broad-bean-aquadulce-s009_1a8a196b-d48f-4bb7-b964-225de2dc8dca.jpg?v=1637121684&width=1146",
+    "plantType": "Vegetable"
+  },
+  {
+    "commonName": "Lettuce 'Tennis Ball' (Organic)",
+    "botanicalName": "Lactuca sativa",
+    "lightRequirements": ["Full Sun", "Part shade"],
+    "waterRequirements": ["Medium"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/products/lettucetennisballS13212.jpg?v=1661992173&width=1146",
+    "plantType": "Vegetable"
+  },
+  {
+    "commonName": "Rhubarb 'Victoria'",
+    "botanicalName": "Rheum x hybridum 'Victoria'",
+    "lightRequirements": ["Full Sun", "Part shade"],
+    "waterRequirements": ["Medium"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/products/rhubarbvictoria.jpg?v=1655943625&width=1146",
+    "plantType": "Vegetable"
+  },
+  {
+    "commonName": "Loofah",
+    "botanicalName": "Luffa cylindrica syn aeygptiaca",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["Drought tolerant"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/products/loofah-s1872_62e7d738-4db3-4e64-b0d0-5888e716215a.jpg?v=1637121058&width=1146",
+    "plantType": "Vegetable"
+  },
+  {
+    "commonName": "Roquette (Organic)",
+    "botanicalName": "Eruca sativa",
+    "lightRequirements": ["Full Sun"],
+    "waterRequirements": ["Drought tolerant"],
+    "imageUrl": "https://www.diggers.com.au/cdn/shop/products/roquette-s004_47377676-345a-48d9-95e6-bf0a2f73c0b8.jpg?v=1637121411&width=1146",
+    "plantType": "Vegetable"
   }
 ]

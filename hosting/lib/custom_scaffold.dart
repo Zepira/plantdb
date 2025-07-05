@@ -92,12 +92,7 @@ class CustomScaffold extends StatelessWidget {
         ),
       ),
       backgroundColor: Colors.white,
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800),
-          child: body,
-        ),
-      ),
+      body: Center(child: body),
     );
   }
 }

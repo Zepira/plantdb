@@ -1,6 +1,7 @@
 const admin = require("firebase-admin");
 const fs = require("fs");
 const data = require("./data/plant_seed_data.json");
+require("dotenv").config();
 
 console.log("Starting plant data upload...");
 
@@ -8,10 +9,8 @@ console.log("Starting plant data upload...");
 //   fs.readFileSync("./data/plant_seed_data.json", "utf-8")
 // );
 
-const serviceAccount = require("../../garden-api-cf2ec-firebase-adminsdk-fbsvc-e3e3937d1a.json");
-
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.applicationDefault(),
   projectId: "garden-api-cf2ec",
 });
 
