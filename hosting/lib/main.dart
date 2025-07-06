@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart'; // No longer directly querying plants from Firestore
 import 'package:http/http.dart' as http; // Import http package
+import 'package:plant_db/api_service.dart';
+import 'package:plant_db/data_table.dart';
 import 'dart:convert'; // For JSON encoding/decoding
 
 import 'package:plant_db/filters.dart'; // Your updated FilterPanel
@@ -49,6 +51,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _searchQuery = '';
   List<Plant> _plants = [];
+  bool _showFilters = false; // State to track filter menu visibility
+  bool _isLoading = false; // State to track if plants are being fetched
+  bool _isReferenceDataLoading =
+      false; // State to track if reference data is being fetched
+  String? _errorMessage; // State to store error messages
 
   // Filter states - align with FilterPanel and API query parameters
   final Set<String> _selectedPlantTypes = {};
@@ -65,15 +72,11 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Map<String, dynamic>> _availablePlantTypes = [];
   List<Map<String, dynamic>> _availableLightRequirements = [];
   List<Map<String, dynamic>> _availableWaterRequirements = [];
-  List<Map<String, dynamic>> _availableGrowthHabits = [];
-  List<Map<String, dynamic>> _availableClimateZones = [];
   List<Map<String, dynamic>> _availableSoilTypes = [];
-  List<Map<String, dynamic>> _availableMatureSizes = [];
-  List<Map<String, dynamic>> _availableBloomColors = [];
 
   // Base URL for your Cloud Functions API
   // IMPORTANT: Replace with your actual deployed Cloud Function URL
-  static const String _apiBaseUrl = 'https://api-bzyhmja4mq-uc.a.run.app';
+  final ApiService _apiService = ApiService();
 
   @override
   void initState() {
@@ -84,134 +87,76 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Fetches dynamic filter options from the API
   Future<void> _fetchReferenceData() async {
+    setState(() {
+      _isReferenceDataLoading = true;
+      _errorMessage = null; // Clear previous errors
+    });
     try {
-      final responsePlantTypes =
-          await http.get(Uri.parse('$_apiBaseUrl/plant-types'));
-      final responseLightRequirements =
-          await http.get(Uri.parse('$_apiBaseUrl/light-requirements'));
-      final responseWaterRequirements =
-          await http.get(Uri.parse('$_apiBaseUrl/water-requirements'));
-      // final responseGrowthHabits = await http.get(Uri.parse('$_apiBaseUrl/growth-habits'));
-      // final responseClimateZones = await http.get(Uri.parse('$_apiBaseUrl/climate-zones'));
-      final responseSoilTypes =
-          await http.get(Uri.parse('$_apiBaseUrl/soil-types'));
-      // final responseMatureSizes = await http.get(Uri.parse('$_apiBaseUrl/mature-sizes'));
-      // final responseBloomColors = await http.get(Uri.parse('$_apiBaseUrl/bloom-colors'));
+      final List<List<Map<String, dynamic>>> results = await Future.wait([
+        _apiService.fetchPlantTypes(),
+        _apiService.fetchLightRequirements(),
+        _apiService.fetchWaterRequirements(),
+        //_apiService.fetchGrowthHabits(),
+        //_apiService.fetchClimateZones(),
+        _apiService.fetchSoilTypes(),
+        //_apiService.fetchMatureSizes(),
+        //_apiService.fetchBloomColors(),
+      ]);
 
-      if (responsePlantTypes.statusCode == 200 &&
-              responseLightRequirements.statusCode == 200 &&
-              responseWaterRequirements.statusCode == 200 &&
-              // responseGrowthHabits.statusCode == 200 &&
-              // responseClimateZones.statusCode == 200 &&
-              responseSoilTypes.statusCode == 200 //&&
-          // responseMatureSizes.statusCode == 200 &&
-          // responseBloomColors.statusCode == 200
-          ) {
-        setState(() {
-          // Map to List<Map<String, dynamic>> to retain both 'id' and 'name'
-          _availablePlantTypes = (json.decode(responsePlantTypes.body) as List)
-              .map((item) => item as Map<String, dynamic>)
-              .toList();
-          _availableLightRequirements =
-              (json.decode(responseLightRequirements.body) as List)
-                  .map((item) => item as Map<String, dynamic>)
-                  .toList();
-          _availableWaterRequirements =
-              (json.decode(responseWaterRequirements.body) as List)
-                  .map((item) => item as Map<String, dynamic>)
-                  .toList();
-          // _availableGrowthHabits = (json.decode(responseGrowthHabits.body) as List)
-          //     .map((item) => item as Map<String, dynamic>)
-          //     .toList();
-          // _availableClimateZones = (json.decode(responseClimateZones.body) as List)
-          //     .map((item) => item as Map<String, dynamic>)
-          //     .toList();
-          _availableSoilTypes = (json.decode(responseSoilTypes.body) as List)
-              .map((item) => item as Map<String, dynamic>)
-              .toList();
-          // _availableMatureSizes = (json.decode(responseMatureSizes.body) as List)
-          //     .map((item) => item as Map<String, dynamic>)
-          //     .toList();
-          // _availableBloomColors = (json.decode(responseBloomColors.body) as List)
-          //     .map((item) => item as Map<String, dynamic>)
-          //     .toList();
-        });
-      } else {
-        print('Failed to load reference data. Status codes: '
-            'Plant Types: ${responsePlantTypes.statusCode}, '
-            'Light Needs: ${responseLightRequirements.statusCode}, '
-            // 'Watering Needs: ${responseWaterRequirements.statusCode}, '
-            // 'Growth Habits: ${responseGrowthHabits.statusCode}, '
-            // 'Climate Zones: ${responseClimateZones.statusCode}, '
-            'Soil Types: ${responseSoilTypes.statusCode}, '
-            // 'Mature Sizes: ${responseMatureSizes.statusCode}, '
-            // 'Bloom Colors: ${responseBloomColors.statusCode}'
-            );
-      }
+      setState(() {
+        _availablePlantTypes = results[0];
+        _availableLightRequirements = results[1];
+        _availableWaterRequirements = results[2];
+        // _availableGrowthHabits = results[3];
+        // _availableClimateZones = results[4];
+        _availableSoilTypes = results[3];
+        // _availableMatureSizes = results[6];
+        // _availableBloomColors = results[7];
+      });
+      _fetchPlants(); // Fetch plants only after reference data is loaded
     } catch (e) {
-      print('Error fetching reference data: $e');
+      setState(() {
+        _errorMessage = 'Error fetching reference data: $e';
+      });
+      print(_errorMessage);
+    } finally {
+      setState(() {
+        _isReferenceDataLoading = false;
+      });
     }
   }
 
   // Fetches plants from the API with current filters
   Future<void> _fetchPlants() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null; // Clear previous errors
+    });
     try {
-      // Construct query parameters
-      final Map<String, String> queryParams = {};
-      if (_searchQuery.isNotEmpty) {
-        // Note: Server-side search logic would be needed for efficient text search
-        // This client-side search query is commented out as it is inefficient for large datasets
-        // queryParams['search_query'] = _searchQuery;
-      }
-      if (_selectedPlantTypes.isNotEmpty) {
-        queryParams['plant_type'] = _selectedPlantTypes.join(',');
-      }
-      if (_selectedLightRequirements != null) {
-        queryParams['light_requirements'] =
-            _selectedLightRequirements.join(',');
-      }
-      if (_selectedWaterRequirements != null) {
-        queryParams['water_requirements'] =
-            _selectedWaterRequirements.join(',');
-      }
-      if (_selectedGrowthHabits.isNotEmpty) {
-        queryParams['growth_habits'] = _selectedGrowthHabits.join(',');
-      }
-      if (_selectedClimateZone != null) {
-        queryParams['climate_zones'] = _selectedClimateZone!;
-      }
-      if (_selectedSoilType != null) {
-        queryParams['soil_type'] = _selectedSoilType.join(',');
-      }
-      if (_selectedMatureSize != null) {
-        queryParams['mature_size'] = _selectedMatureSize!;
-      }
-      if (_selectedBloomColors.isNotEmpty) {
-        queryParams['bloom_colors'] = _selectedBloomColors.join(',');
-      }
+      final List<Plant> fetchedPlants = await _apiService.fetchPlants(
+        searchQuery: _searchQuery,
+        plantTypes: _selectedPlantTypes,
+        lightRequirements: _selectedLightRequirements,
+        waterRequirements: _selectedWaterRequirements,
+        growthHabits: _selectedGrowthHabits,
+        climateZone: _selectedClimateZone,
+        soilType: _selectedSoilType,
+        matureSize: _selectedMatureSize,
+        bloomColors: _selectedBloomColors,
+      );
 
-      final uri = Uri.parse('$_apiBaseUrl/plants')
-          .replace(queryParameters: queryParams);
-      final response = await http.get(uri);
-
-      if (response.statusCode == 200) {
-        final List<dynamic> jsonPlants = json.decode(response.body);
-
-        setState(() {
-          _plants = jsonPlants
-              .map((data) => Plant.fromJson(data as Map<String, dynamic>))
-              .toList();
-        });
-      } else {
-        print('Failed to load plants: ${response.statusCode} ${response.body}');
-        setState(() {
-          _plants = []; // Clear plants on error
-        });
-      }
-    } catch (e) {
-      print('Error fetching plants: $e');
       setState(() {
+        _plants = fetchedPlants;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error fetching plants: $e';
         _plants = []; // Clear plants on error
+      });
+      print(_errorMessage);
+    } finally {
+      setState(() {
+        _isLoading = false;
       });
     }
   }
@@ -299,10 +244,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // The client-side filtering based on _searchQuery is still here,
-    // but the main filtering logic for plant attributes is now server-side.
-    // If you want text search to also be server-side, you'll need to implement
-    // that in your Cloud Function and pass `_searchQuery` to the API.
     final filteredPlantsBySearch = _searchQuery == ''
         ? _plants
         : _plants
@@ -312,6 +253,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 .contains(_searchQuery.toLowerCase()))
             .toList();
 
+    // Get screen width to adjust layout for mobile
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600; // Define a breakpoint for mobile
+
     return CustomScaffold(
       breadcrumbs: const [
         {'label': 'Home', 'route': '/'},
@@ -320,140 +265,83 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Filter Panel
-            FilterPanel(
-              selectedPlantTypes: _selectedPlantTypes,
-              selectedLightRequirements: _selectedLightRequirements,
-              selectedWaterRequirements: _selectedWaterRequirements,
-              // selectedGrowthHabits: _selectedGrowthHabits,
-              // selectedClimateZone: _selectedClimateZone,
-              selectedSoilType: _selectedSoilType,
-              // selectedMatureSize: _selectedMatureSize,
-              // selectedBloomColors: _selectedBloomColors,
-              onPlantTypeChanged: _onPlantTypeChanged,
-              onLightRequirementsChanged: _onLightRequirementsChanged,
-              onWaterRequirementsChanged: _onWaterRequirementsChanged,
-              // onGrowthHabitChanged: _onGrowthHabitChanged,
-              // onClimateZoneChanged: _onClimateZoneChanged,
-              onSoilTypeChanged: _onSoilTypeChanged,
-              // onMatureSizeChanged: _onMatureSizeChanged,
-              // onBloomColorChanged: _onBloomColorChanged,
-
-              // Pass the fetched reference data to populate the filters
-              // Ensure these are passed as `List<String>` or `List<dynamic>` depending on your FilterPanel implementation
-              availablePlantTypes: _availablePlantTypes,
-              availableLightRequirements: _availableLightRequirements,
-              availableWaterRequirements: _availableWaterRequirements,
-              availableGrowthHabits: _availableGrowthHabits,
-              availableClimateZones: _availableClimateZones,
-              availableSoilTypes: _availableSoilTypes,
-              availableMatureSizes: _availableMatureSizes,
-              availableBloomColors: _availableBloomColors,
-            ),
-            const SizedBox(width: 16), // Spacing between side panel and content
+            // Show/Hide Filters Button
+            if (_showFilters)
+              FilterPanel(
+                selectedPlantTypes: _selectedPlantTypes,
+                selectedLightRequirements: _selectedLightRequirements,
+                selectedWaterRequirements: _selectedWaterRequirements,
+                selectedSoilType: _selectedSoilType,
+                onPlantTypeChanged: _onPlantTypeChanged,
+                onLightRequirementsChanged: _onLightRequirementsChanged,
+                onWaterRequirementsChanged: _onWaterRequirementsChanged,
+                onSoilTypeChanged: _onSoilTypeChanged,
+                availablePlantTypes: _availablePlantTypes,
+                availableLightRequirements: _availableLightRequirements,
+                availableWaterRequirements: _availableWaterRequirements,
+                availableSoilTypes: _availableSoilTypes,
+              ),
+            if (_showFilters && !isMobile)
+              const SizedBox(width: 16), // Spacing between filter and content
             // Main Content Area
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            _searchQuery = value;
-                          });
-                        },
-                        decoration: InputDecoration(
-                          hintText: 'Search plants...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          prefixIcon: const Icon(Icons.search),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Show/Hide Filters Button
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _showFilters =
+                              !_showFilters; // Toggle filter visibility
+                        });
+                      },
+                      child:
+                          Text(_showFilters ? 'Hide Filters' : 'Show Filters'),
+                    ),
+                  ),
+                  // Search Bar
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: TextField(
+                      onChanged: (value) {
+                        setState(() {
+                          _searchQuery = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Search plants...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
+                        prefixIcon: const Icon(Icons.search),
                       ),
                     ),
-                    // Scrollable Plant List
-                    ListView.builder(
-                      shrinkWrap:
-                          true, // Ensures the ListView takes only the necessary space
-                      physics:
-                          const NeverScrollableScrollPhysics(), // Prevents nested scrolling
-                      itemCount: filteredPlantsBySearch.length,
-                      itemBuilder: (context, index) {
-                        final plant = filteredPlantsBySearch[index];
-                        return Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Enlarged Image (4x bigger)
-                              SizedBox(
-                                height:
-                                    400.0, // 4x the original height (200 * 4)
-                                width: 400.0, // 4x the original width (200 * 4)
-                                child: plant.imageUrl != null
-                                    ? Image.network(
-                                        plant.imageUrl!,
-                                        width: 400,
-                                        height: 400,
-                                        fit: BoxFit.contain,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return const Icon(
-                                            Icons.image_not_supported,
-                                            size: 400,
-                                          );
-                                        },
-                                      )
-                                    : const Icon(
-                                        Icons.image_not_supported,
-                                        size: 400,
-                                      ),
-                              ),
-                              const SizedBox(
-                                  width: 16), // Spacing between image and text
-                              // Plant Details
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      plant.commonName ?? 'Unknown',
-                                      style: const TextStyle(
-                                        fontSize:
-                                            24, // Larger font size for the title
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                        height:
-                                            8), // Spacing between title and subtitle
-                                    Text(
-                                      plant.botanicalName ?? 'No description',
-                                      style: const TextStyle(
-                                        fontSize:
-                                            18, // Larger font size for the subtitle
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                  ),
+                  // Scrollable Content (Plant List + Planting Calendar)
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Plant List
+                          PlantTable(
+                            plants: filteredPlantsBySearch,
+                            isFilterPanelOpen: _showFilters,
                           ),
-                        );
-                      },
+
+                          const SizedBox(height: 16), // Optional spacing
+                          // Planting Calendar
+                          PlantingChart(
+                            plantData: filteredPlantsBySearch,
+                          ),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 16), // Optional spacing
-                    // Planting Calendar
-                    PlantingChart(
-                      plantData: filteredPlantsBySearch,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],

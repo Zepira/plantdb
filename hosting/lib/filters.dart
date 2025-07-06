@@ -1,71 +1,99 @@
 import 'package:flutter/material.dart';
 
-class FilterPanel extends StatelessWidget {
+class FilterPanel extends StatefulWidget {
   final Set<String> selectedPlantTypes;
   final Set<String> selectedLightRequirements;
   final Set<String> selectedWaterRequirements;
-  // final Set<String> selectedGrowthHabits;
-  // final String? selectedClimateZone;
   final Set<String> selectedSoilType;
-  // final String? selectedMatureSize;
-  // final Set<String> selectedBloomColors;
 
   final Function(String, bool) onPlantTypeChanged;
   final Function(String, bool) onLightRequirementsChanged;
   final Function(String, bool) onWaterRequirementsChanged;
-  // final Function(String, bool) onGrowthHabitChanged;
-  // final Function(String?) onClimateZoneChanged;
   final Function(String, bool) onSoilTypeChanged;
-  // final Function(String?) onMatureSizeChanged;
-  // final Function(String, bool) onBloomColorChanged;
 
-  // New: Parameters to receive the available reference data lists
   final List<Map<String, dynamic>> availablePlantTypes;
   final List<Map<String, dynamic>> availableLightRequirements;
   final List<Map<String, dynamic>> availableWaterRequirements;
-  final List<Map<String, dynamic>> availableGrowthHabits;
-  final List<Map<String, dynamic>> availableClimateZones;
   final List<Map<String, dynamic>> availableSoilTypes;
-  final List<Map<String, dynamic>> availableMatureSizes;
-  final List<Map<String, dynamic>> availableBloomColors;
 
   const FilterPanel({
     Key? key,
     required this.selectedPlantTypes,
     required this.selectedLightRequirements,
     required this.selectedWaterRequirements,
-    // required this.selectedGrowthHabits,
-    // required this.selectedClimateZone,
     required this.selectedSoilType,
-    // required this.selectedMatureSize,
-    // required this.selectedBloomColors,
     required this.onPlantTypeChanged,
     required this.onLightRequirementsChanged,
     required this.onWaterRequirementsChanged,
-    // required this.onGrowthHabitChanged,
-    // required this.onClimateZoneChanged,
     required this.onSoilTypeChanged,
-    // required this.onMatureSizeChanged,
-    // required this.onBloomColorChanged,
-    // Initialize new parameters
     required this.availablePlantTypes,
     required this.availableLightRequirements,
     required this.availableWaterRequirements,
-    required this.availableGrowthHabits,
-    required this.availableClimateZones,
     required this.availableSoilTypes,
-    required this.availableMatureSizes,
-    required this.availableBloomColors,
   }) : super(key: key);
 
-  // Helper method to create filter section headers
-  Widget _buildFilterHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      ),
+  @override
+  _FilterPanelState createState() => _FilterPanelState();
+}
+
+class _FilterPanelState extends State<FilterPanel> {
+  // State to track expanded/collapsed status for each filter type
+  final Map<String, bool> _isExpanded = {
+    'Plant Type': false,
+    'Light Requirements': false,
+    'Watering Requirements': false,
+    'Soil Type': false,
+  };
+
+  // Helper method to build collapsible filter sections
+  Widget _buildCollapsibleFilter({
+    required String title,
+    required List<Map<String, dynamic>> options,
+    required Set<String> selectedValues,
+    required Function(String, bool) onChanged,
+  }) {
+    final selectedCount = selectedValues.length;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              _isExpanded[title] = !_isExpanded[title]!;
+            });
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '$title ${selectedCount > 0 ? '($selectedCount)' : ""}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Icon(
+                _isExpanded[title]! ? Icons.expand_less : Icons.expand_more,
+              ),
+            ],
+          ),
+        ),
+        if (_isExpanded[title]!)
+          Column(
+            children: options.map((option) {
+              return CheckboxListTile(
+                title: Text(option['name'] as String),
+                value: selectedValues.contains(option['name'] as String),
+                onChanged: (bool? value) {
+                  onChanged(option['name'] as String, value ?? false);
+                },
+                dense: true,
+              );
+            }).toList(),
+          ),
+        const Divider(height: 16, thickness: 1), // Divider for aesthetics
+      ],
     );
   }
 
@@ -82,12 +110,11 @@ class FilterPanel extends StatelessWidget {
             color: Colors.grey.withOpacity(0.3),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: const Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3), // Changes position of shadow
           ),
         ],
       ),
       child: SingleChildScrollView(
-        // Makes the panel scrollable if content overflows
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -102,122 +129,37 @@ class FilterPanel extends StatelessWidget {
             const Divider(
                 height: 24, thickness: 1), // A separator for aesthetics
 
-            // Filter: Plant Type
-            _buildFilterHeader('Plant Type'),
-            // Use availablePlantTypes to dynamically generate checkboxes
-            ...availablePlantTypes.map((type) {
-              return CheckboxListTile(
-                title: Text(type['name'] as String), // Display 'name'
-                value: selectedPlantTypes
-                    .contains(type['name'] as String), // Check against 'id'
-                onChanged: (bool? value) => onPlantTypeChanged(
-                    type['name'] as String, value ?? false), // Pass 'id' back
-                dense: true,
-              );
-            }).toList(),
+            // Collapsible Filter: Plant Type
+            _buildCollapsibleFilter(
+              title: 'Plant Type',
+              options: widget.availablePlantTypes,
+              selectedValues: widget.selectedPlantTypes,
+              onChanged: widget.onPlantTypeChanged,
+            ),
 
-            // Filter: Light Needs
-            _buildFilterHeader('Light Requirements'),
-            ...availableLightRequirements.map((type) {
-              return CheckboxListTile(
-                title: Text(type['name'] as String), // Display 'name'
-                value: selectedLightRequirements
-                    .contains(type['name'] as String), // Check against 'id'
-                onChanged: (bool? value) => onLightRequirementsChanged(
-                    type['name'] as String, value ?? false), // Pass 'id' back
-                dense: true,
-              );
-            }).toList(),
+            // Collapsible Filter: Light Requirements
+            _buildCollapsibleFilter(
+              title: 'Light Requirements',
+              options: widget.availableLightRequirements,
+              selectedValues: widget.selectedLightRequirements,
+              onChanged: widget.onLightRequirementsChanged,
+            ),
 
-            // Filter: Watering Needs
-            _buildFilterHeader('Watering Requirements'),
-            ...availableWaterRequirements.map((type) {
-              return CheckboxListTile(
-                title: Text(type['name'] as String), // Display 'name'
-                value: selectedWaterRequirements
-                    .contains(type['name'] as String), // Check against 'id'
-                onChanged: (bool? value) => onWaterRequirementsChanged(
-                    type['name'] as String, value ?? false), // Pass 'id' back
-                dense: true,
-              );
-            }).toList(),
+            // Collapsible Filter: Watering Requirements
+            _buildCollapsibleFilter(
+              title: 'Watering Requirements',
+              options: widget.availableWaterRequirements,
+              selectedValues: widget.selectedWaterRequirements,
+              onChanged: widget.onWaterRequirementsChanged,
+            ),
 
-            // // Filter: Growth Habit
-            // _buildFilterHeader('Growth Habit'),
-            // // Use availableGrowthHabits to dynamically generate checkboxes
-            // ...availableGrowthHabits.map((habit) {
-            //   return CheckboxListTile(
-            //     title: Text(habit['name'] as String),
-            //     value: selectedGrowthHabits.contains(habit['id'] as String),
-            //     onChanged: (bool? value) =>
-            //         onGrowthHabitChanged(habit['id'] as String, value ?? false),
-            //     dense: true,
-            //   );
-            // }).toList(),
-
-            // // Filter: Climate Zone (USDA Hardiness Zones)
-            // _buildFilterHeader('Climate Zone'),
-            // DropdownButtonFormField<String>(
-            //   value: selectedClimateZone,
-            //   hint: const Text('Select Climate Zone'),
-            //   decoration: const InputDecoration(
-            //     border: OutlineInputBorder(),
-            //     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            //   ),
-            //   // Use availableClimateZones to dynamically generate dropdown items
-            //   items: availableClimateZones.map((zone) {
-            //     return DropdownMenuItem<String>(
-            //       value: zone['id'] as String,
-            //       child: Text(zone['name'] as String),
-            //     );
-            //   }).toList(),
-            //   onChanged: onClimateZoneChanged,
-            // ),
-
-            // Filter: Soil Type
-            _buildFilterHeader('Soil Type'),
-            ...availableSoilTypes.map((type) {
-              return CheckboxListTile(
-                title: Text(type['name'] as String), // Display 'name'
-                value: selectedSoilType
-                    .contains(type['name'] as String), // Check against 'id'
-                onChanged: (bool? value) => onSoilTypeChanged(
-                    type['name'] as String, value ?? false), // Pass 'id' back
-                dense: true,
-              );
-            }).toList(),
-
-            // // Filter: Mature Size
-            // _buildFilterHeader('Mature Size'),
-            // DropdownButtonFormField<String>(
-            //   value: selectedMatureSize,
-            //   hint: const Text('Select Mature Size'),
-            //   decoration: const InputDecoration(
-            //     border: OutlineInputBorder(),
-            //     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            //   ),
-            //   // Use availableMatureSizes to dynamically generate dropdown items
-            //   items: availableMatureSizes.map((size) {
-            //     return DropdownMenuItem<String>(
-            //       value: size['id'] as String,
-            //       child: Text(size['name'] as String),
-            //     );
-            //   }).toList(),
-            //   onChanged: onMatureSizeChanged,
-            // ),
-
-            // // Filter: Bloom Color
-            // _buildFilterHeader('Bloom Color'),
-            // // Use availableBloomColors to dynamically generate checkboxes
-            // ...availableBloomColors.map((color) {
-            //   return CheckboxListTile(
-            //     title: Text(color['name'] as String),
-            //     value: selectedBloomColors.contains(color['id'] as String),
-            //     onChanged: (bool? value) =>
-            //         onBloomColorChanged(color['id'] as String, value ?? false),
-            //     dense: true,
-            //   );
-            // }).toList(),
+            // Collapsible Filter: Soil Type
+            _buildCollapsibleFilter(
+              title: 'Soil Type',
+              options: widget.availableSoilTypes,
+              selectedValues: widget.selectedSoilType,
+              onChanged: widget.onSoilTypeChanged,
+            ),
           ],
         ),
       ),
